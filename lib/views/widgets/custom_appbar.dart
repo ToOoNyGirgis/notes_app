@@ -15,8 +15,8 @@ class CustomAppBar extends StatelessWidget {
             fontSize: 20.sp,
           ),
         ),
-        Spacer(),
-        CustomIcon(),
+        const Spacer(),
+        const CustomIcon(),
       ],
     );
   }
