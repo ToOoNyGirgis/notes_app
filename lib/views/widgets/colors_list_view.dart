@@ -1,30 +1,64 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_app/constants.dart';
+import 'package:notes_app/cubits/add_note_cubit/add_note_cubit.dart';
+import 'package:sizer/sizer.dart';
 
 class ColorItem extends StatelessWidget {
-  const ColorItem({Key? key}) : super(key: key);
-
+  const ColorItem({Key? key, required this.isActive, required this.color})
+      : super(key: key);
+  final bool isActive;
+  final Color color;
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Colors.red,
-      radius: 24,
-    );
+    return isActive
+        ? CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 24,
+            child: CircleAvatar(
+              backgroundColor: color,
+              radius: 20,
+            ),
+          )
+        : CircleAvatar(
+            backgroundColor: color,
+            radius: 24,
+          );
   }
 }
 
-class ColorsListView extends StatelessWidget {
+class ColorsListView extends StatefulWidget {
   const ColorsListView({Key? key}) : super(key: key);
 
   @override
+  State<ColorsListView> createState() => _ColorsListViewState();
+}
+
+class _ColorsListViewState extends State<ColorsListView> {
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 24*2,
+    return SizedBox(
+      height: 24 * 2,
       child: ListView.builder(
-        itemCount: 5,
+        itemCount: kColors.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return const  ColorItem();
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: GestureDetector(
+              onTap: () {
+                currentIndex = index;
+                BlocProvider.of<AddNoteCubit>(context).color = kColors[index];
+                setState(() {});
+              },
+              child: ColorItem(
+                color: kColors[index],
+                isActive: currentIndex == index,
+              ),
+            ),
+          );
         },
       ),
     );
